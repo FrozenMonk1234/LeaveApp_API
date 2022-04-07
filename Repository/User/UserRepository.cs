@@ -18,14 +18,14 @@ namespace LeaveApp_API.Repository.User
         {
             Models.User result = new Models.User();
             var checkDb = await _db.User.Where(x => x.FirstName == model.FirstName || x.LastName == model.LastName).FirstOrDefaultAsync();
-            if (checkDb != null)
+            if (checkDb == null)
             {
                 await _db.User.AddAsync(model);
 
                 var save = await _db.SaveChangesAsync();
                 if (save > 0)
                 {
-                    result = await _db.User.FindAsync(model);
+                    result = await _db.User.Where(x => x.FirstName == model.FirstName && x.LastName == model.LastName).FirstOrDefaultAsync();
                     return result;
                 }
                 else
